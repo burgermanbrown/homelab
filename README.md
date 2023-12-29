@@ -1,5 +1,5 @@
 # Dell Precision Tower Homelab Server
-Install guide/progress on a selfhosed virtualization server built on a Dell Precision Tower 7820
+Install guide/progress on a self-hosed virtualization server built on a Dell Precision Tower 7820
 
 ## Hardware/Software:
 
