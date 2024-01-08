@@ -11,6 +11,7 @@ Install guide/progress on a self-hosed virtualization server built on a Dell Pre
 |GPU| EVGA SUPERCLOCKED GTX 1080 8GB|
 |OS|Debian Bookworm (Headless)|
 |VIRTUALIZATION CLIENT|VMware Workstation 17 Pro|
+| APPLICATIONS | Plex, Nextcloud, qBittorrent, etc. |
 
 ## Goals
 - [x] Successfuly boot into OS and configure Cockpit for access via web interface
