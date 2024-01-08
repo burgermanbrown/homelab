@@ -53,6 +53,7 @@ usermod -aG sudo $username
 With our user configured for sudo, we can now proceed with installing the Cockpit package. To do so we run the command ```sudo apt install cockpit```.
 
 ### Setting up Cockpit
+
 Post installation, Cockpit’s service doesn’t automatically activate. You need to implement a few ```systemctl``` commands to initiate and enable Cockpit on your Debian system.
 
 **Step 1: Activate the Cockpit service**
@@ -60,11 +61,13 @@ Post installation, Cockpit’s service doesn’t automatically activate. You nee
 sudo systemctl start cockpit.socket
 ```
 **Step 2: Enabling Cockpit on System Boot**
+
 For automatic startup of Cockpit whenever your system boots, execute the following command:
 ```
 sudo systemctl enable cockpit.socket
 ```
 **Step 3: Verifying Cockpit Service Status**
+
 In the final step, confirming if Cockpit is running as expected on your system is crucial. You can check the service status of Cockpit using the next command:
 ```
 systemctl status cockpit.socket
@@ -74,6 +77,7 @@ When the setup is correctly done, you should see the service status indicated as
 We will also need to configure the Uncomplicated Firewall (UFW) to permit Cockpit access through the firewall. Cockpit listens on port 9090 by default, and we must ensure that the firewall rules allow incoming connections on this port.
 
 **Step 1: Assessing UFW Status**
+
 The first task is to ascertain the current status of the UFW firewall. This is critical before making any changes to avoid compromising security. Run the following command to verify the status:
 ```
 sudo ufw status
@@ -87,6 +91,7 @@ In the event your Debian system does not have UFW installed, it can be installed
 sudo apt install ufw
 ```
 **Step 2: Granting Cockpit Access Through Firewall**
+
 The next step is to configure the UFW firewall to permit incoming connections for Cockpit. Execute the following command to achieve this:
 ```
 sudo ufw allow 9090
@@ -98,6 +103,7 @@ Rules updated (v6)
 The displayed output signifies that the firewall rules for both IPv4 and IPv6 are updated, allowing traffic on port 9090.
 ```
 **Step 3: Verifying the Firewall Configuration**
+
 It’s vital to verify that the firewall configuration is correctly set up and grants access to Cockpit. To check the UFW rules, run the following command:
 ```
 sudo ufw status
