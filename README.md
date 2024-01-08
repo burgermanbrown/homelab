@@ -16,6 +16,7 @@ Install guide/progress on a self-hosed virtualization server built on a Dell Pre
 - [x] Successfuly boot into OS and configure Cockpit for access via web interface
 - [ ] Configure VMWare
 - [ ] Configure SSH server
+- [ ] Configure VPN gateway
 - [ ] Setup Plex for video and music streaming
 - [ ] Setup nextcloud instance for file hosting
 - [ ] Configure webserver for hosting public facing website
