@@ -8,9 +8,9 @@ With the USB Drive recognized, we can proceed with the OS installation. I will b
 
 This host will be named "Venture" (venture.homelab.srv) in honor of the classic Adult Swim series. After partitioning the system drive and configuring the root and user accounts, we are presented with our first challenge:
 ```
-brown@venture: sudo su
+thaddeus@gargantua: sudo su
 -bash: sudo: command not found
-brown@venture:
+thaddeus@gargantua:
 ```
 It is clear that the main user on the machine is not in the super user group and thus cannot elevate their commands with ```sudo```. It is important that we remedy this instead of just switching to the root user. Working as root when installing packages, making changes to the system, etc. is dangerous when you have unchecked access to **ALL** resources on the system. In this instance we will need to switch to root and make the necessary changes for "brown" in the user groups:
 
