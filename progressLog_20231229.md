@@ -1,4 +1,4 @@
-## Progress Log - 2023/12/29 - It's Alive!
+# Progress Log - 2023/12/29 - It's Alive!
 
 After helping the UPS driver get this out the truck and discarding the enormous packaging, the device is ready to be provisioned! Before installing the OS I needed to make some changes to the BIOS:
 - Disable secure boot to mitigate headaches during setup (this may no longer be a problem post Bookworm, but it can't hurt)
