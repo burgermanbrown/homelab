@@ -79,7 +79,7 @@ Confirm with 'Y' and proceed with the installation, you'll eventually be present
 
 Don't fret, this doesn't apply to us since we wont be distributing OpenZFS and DKMS in any images. Press 'enter' and proceed.
 
-**NOTE: This can take some time, be patient even if it hangs for a little while. If you're like me, you won't have some modules build on your OS by default, so the installer will need to create them as well.**
+**NOTE: This can take some time, be patient even if it hangs for a little while. If you're like me, you won't have some modules built on your OS by default, so the installer will need to create them as well.**
 
 Once finished, we're ready to proceed to the creation of the pool.
 
@@ -133,7 +133,7 @@ In case of using whole disks ZFS will automatically reserve 8 MiB at the end of 
 
 When using partitions (or preparing the disk manually in advance) it is possible to also use the GPT partition labels to identify the partition/disk, as they are customizable and nicer for humans to understand. These can be found in ```/dev/disk/by-partlabel/```.
 
-We will be creating a raidz1 pool as our usage will likely be low enough to not necessitate two disk redundancy:
+We will be creating a mirrored pool with all four disks, with 2 disks per mirror:
 
 We will start by getting the list of disks on our device.
 ```
@@ -164,4 +164,15 @@ lrwxrwxrwx 1 root root 10 Feb  1 00:20 wwn-0x55cd2e404b5f9de1-part2 -> ../../sdf
 lrwxrwxrwx 1 root root 10 Feb  1 00:20 wwn-0x55cd2e404b5f9de1-part3 -> ../../sdf3
 ```
 
+We know sda, sdb, sdc and sde to be the drives we wish to configure for mirrors, so grabbing their respective IDs we can create two pools called "bucket" aand "bucket-backup" with the four drives:
+
+**bucket**:
+```
+sudo zpool create bucket mirror ata-ST12000VN0008-2YS101_ZRT122M3 ata-ST12000VN0008-2YS101_ZV70GYDY
+```
+**bucket-backup**:
+```
+zpool add bucket ata-ST12000VN0008-2YS101_ZRT0XFVM ata-ST12000VN0008-2YS101_ZV70GYWW
+```
+Entering ```zpool list``` will output our newly created mirros:
 
