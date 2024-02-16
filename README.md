@@ -15,7 +15,7 @@ Install guide/progress on a self-hosed virtualization server built on a Dell Pre
 
 ## Goals
 - [x] Successfuly boot into OS and configure Cockpit for access via web interface
-- [ ] Configure ZFS
+- [x] Configure ZFS
 - [ ] Configure SSH server
 - [ ] Setup nextcloud instance for file hosting
-- [ ] Configure webserver for hosting public facing website
+- [ ] migrate files from Onedrive over to Nextcloud using Rsync
