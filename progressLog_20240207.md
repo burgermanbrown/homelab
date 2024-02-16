@@ -133,46 +133,97 @@ In case of using whole disks ZFS will automatically reserve 8 MiB at the end of 
 
 When using partitions (or preparing the disk manually in advance) it is possible to also use the GPT partition labels to identify the partition/disk, as they are customizable and nicer for humans to understand. These can be found in ```/dev/disk/by-partlabel/```.
 
-We will be creating a mirrored pool with all four disks, with 2 disks per mirror:
+For optimal IOPS, we will be creating a mirrored pool with all four disks, with 2 disks per mirror:
 
-We will start by getting the list of disks on our device.
-```
-thaddeus@gargantua:~$ ls -l /dev/disk/by-id/
-```
+We will start by getting the list of disks on our device with ```sudo fdisk -l```.
 
 Our output yields the following:
 ```
-total 0
-lrwxrwxrwx 1 root root  9 Feb  1 00:20 ata-CT480BX500SSD1_1929E18F7AA1 -> ../../sdg
-lrwxrwxrwx 1 root root  9 Feb  1 00:20 ata-INTEL_SSDSC2BA800G3E_BTTV4133018G800JGN -> ../../sdf
-lrwxrwxrwx 1 root root 10 Feb  1 00:20 ata-INTEL_SSDSC2BA800G3E_BTTV4133018G800JGN-part1 -> ../../sdf1
-lrwxrwxrwx 1 root root 10 Feb  1 00:20 ata-INTEL_SSDSC2BA800G3E_BTTV4133018G800JGN-part2 -> ../../sdf2
-lrwxrwxrwx 1 root root 10 Feb  1 00:20 ata-INTEL_SSDSC2BA800G3E_BTTV4133018G800JGN-part3 -> ../../sdf3
-lrwxrwxrwx 1 root root  9 Feb  1 00:20 ata-SPCCSolidStateDisk_AA000000000000000592 -> ../../sdd
-lrwxrwxrwx 1 root root  9 Feb  1 00:20 ata-ST12000VN0008-2YS101_ZRT0XFVM -> ../../sdc
-lrwxrwxrwx 1 root root  9 Feb  1 00:20 ata-ST12000VN0008-2YS101_ZRT122M3 -> ../../sda
-lrwxrwxrwx 1 root root  9 Feb  1 00:20 ata-ST12000VN0008-2YS101_ZV70GYDY -> ../../sdb
-lrwxrwxrwx 1 root root  9 Feb  1 00:20 ata-ST12000VN0008-2YS101_ZV70GYWW -> ../../sde
-lrwxrwxrwx 1 root root  9 Feb  1 00:20 usb-Generic-_SD_MMC_CRW_28203008282014000-0:0 -> ../../sdh
-lrwxrwxrwx 1 root root  9 Feb  1 00:20 wwn-0x5000c500e7efa344 -> ../../sde
-lrwxrwxrwx 1 root root  9 Feb  1 00:20 wwn-0x5000c500e7f5cb96 -> ../../sda
-lrwxrwxrwx 1 root root  9 Feb  1 00:20 wwn-0x5000c500e806e3b8 -> ../../sdc
-lrwxrwxrwx 1 root root  9 Feb  1 00:20 wwn-0x5000c500e8096707 -> ../../sdb
-lrwxrwxrwx 1 root root  9 Feb  1 00:20 wwn-0x55cd2e404b5f9de1 -> ../../sdf
-lrwxrwxrwx 1 root root 10 Feb  1 00:20 wwn-0x55cd2e404b5f9de1-part1 -> ../../sdf1
-lrwxrwxrwx 1 root root 10 Feb  1 00:20 wwn-0x55cd2e404b5f9de1-part2 -> ../../sdf2
-lrwxrwxrwx 1 root root 10 Feb  1 00:20 wwn-0x55cd2e404b5f9de1-part3 -> ../../sdf3
+Disk /dev/sda: 10.91 TiB, 12000138625024 bytes, 23437770752 sectors
+Disk model: ST12000VN0008-2Y
+Units: sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 4096 bytes
+I/O size (minimum/optimal): 4096 bytes / 4096 bytes
+Disklabel type: gpt
+Disk identifier: 5FC22A8D-FE56-F346-A422-07C8896C96AE
+
+Disk /dev/sdf: 745.21 GiB, 800166076416 bytes, 1562824368 sectors
+Disk model: INTEL SSDSC2BA80
+Units: sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+I/O size (minimum/optimal): 512 bytes / 512 bytes
+Disklabel type: gpt
+Disk identifier: 1E15B930-ED04-4C22-8D06-A7C3D3D47AFA
+
+Disk /dev/sdd: 10.91 TiB, 12000138625024 bytes, 23437770752 sectors
+Disk model: ST12000VN0008-2Y
+Units: sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 4096 bytes
+I/O size (minimum/optimal): 4096 bytes / 4096 bytes
+Disklabel type: gpt
+Disk identifier: 77B47B64-7B13-5440-B08B-1E1097B15975
+
+Disk /dev/sdb: 10.91 TiB, 12000138625024 bytes, 23437770752 sectors
+Disk model: ST12000VN0008-2Y
+Units: sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 4096 bytes
+I/O size (minimum/optimal): 4096 bytes / 4096 bytes
+Disklabel type: gpt
+Disk identifier: DC1BDFD9-CBD7-5249-A989-E69E6C44212F
+
+Disk /dev/sde: 447.13 GiB, 480103981056 bytes, 937703088 sectors
+Disk model: CT480BX500SSD1  
+Units: sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+I/O size (minimum/optimal): 512 bytes / 512 bytes
+Disklabel type: gpt
+Disk identifier: AF621C01-2E25-4432-BEAB-2C5E61C2B620
+
+Disk /dev/sdc: 10.91 TiB, 12000138625024 bytes, 23437770752 sectors
+Disk model: ST12000VN0008-2Y
+Units: sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 4096 bytes
+I/O size (minimum/optimal): 4096 bytes / 4096 bytes
+Disklabel type: gpt
+Disk identifier: AFF3CD6A-2E9E-694E-927E-447B3532EEEF
+
+Disk /dev/sdg: 476.94 GiB, 512110190592 bytes, 1000215216 sectors
+Disk model: SPCCSolidStateDi
+Units: sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+I/O size (minimum/optimal): 512 bytes / 512 bytes
+Disklabel type: gpt
+Disk identifier: 32804ED8-F6A7-4672-A8AF-7A97881539B3
 ```
 
-We know sda, sdb, sdc and sde to be the drives we wish to configure for mirrors, so grabbing their respective IDs we can create two pools called "bucket" aand "bucket-backup" with the four drives:
+We know sda, sdb, sdc and sdd to be the drives we wish to configure for mirrors, so grabbing their respective directories in ```/dev/``` we can create a pool called "bucket" with two drives per mirror:
 
-**bucket**:
 ```
-sudo zpool create bucket mirror ata-ST12000VN0008-2YS101_ZRT122M3 ata-ST12000VN0008-2YS101_ZV70GYDY
-```
-**bucket-backup**:
-```
-zpool add bucket ata-ST12000VN0008-2YS101_ZRT0XFVM ata-ST12000VN0008-2YS101_ZV70GYWW
+sudo zpool create bucket mirror sda sdb mirror sdc sdd
 ```
 Entering ```zpool list``` will output our newly created mirros:
+```
+NAME     SIZE  ALLOC   FREE  CKPOINT  EXPANDSZ   FRAG    CAP  DEDUP    HEALTH  ALTROOT
+bucket  21.8T   444K  21.8T        -         -     0%     0%  1.00x    ONLINE  -
+```
+Entering ```zpool status bucket``` will output the status of our vdevs and the drives that comprise them:
+```
+  pool: bucket
+ state: ONLINE
+config:
 
+        NAME        STATE     READ WRITE CKSUM
+        bucket      ONLINE       0     0     0
+          mirror-0  ONLINE       0     0     0
+            sda     ONLINE       0     0     0
+            sdb     ONLINE       0     0     0
+          mirror-1  ONLINE       0     0     0
+            sdc     ONLINE       0     0     0
+            sdd     ONLINE       0     0     0
+
+errors: No known data errors
+```
+All that's left is to mount the pool. We will be mounting our pool ```bucket``` in a directory named ```storage```:
+```
+thaddeus@gargantua:/$ sudo zfs set mountpoint=/storage bucket
+```
